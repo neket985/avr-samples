@@ -13,22 +13,13 @@ void togglePinOnPortA(uint8_t i) {
     togglePin(&PORTA, pins[i]);
 }
 
-_Noreturn void unsinkLed(void) {
+void ledParallel() {
     const uint8_t delay = 200;
 
     DDRA = 0xff; // set pin as output
-    uint8_t toExecutes[] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
-    const uint8_t size = sizeof(toExecutes);
-    uint16_t initDelaysMs[] = {0 * delay, 1 * delay, 2 * delay, 3 * delay, 4 * delay, 5 * delay, 6 * delay, 7 * delay};
-    uint16_t delaysMs[] = {size * delay, size * delay, size * delay, size * delay, size * delay, size * delay,
-                           size * delay, size * delay};
+    const uint8_t size = sizeof(pins)/sizeof(uint8_t);
 
-    parallelProcess(
-            size,
-            &toExecutes,
-            &initDelaysMs,
-            &delaysMs,
-            togglePinOnPortA
-    );
+    for (uint8_t i = 0; i < size; ++i) {
+        addParallelProcess(FALSE, i * delay, size * delay, togglePinOnPortA);
+    }
 }
-

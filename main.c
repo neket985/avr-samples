@@ -5,13 +5,16 @@
 #include <util/delay.h>
 
 #include "helper/helper.c"
+#include "helper/parallel.c"
 
-//#include "servo.c"
+#include "servo.c"
 #include "led.c"
 
 int main(void)
 {
-//    servo();
-//    led();
-    unsinkLed();
+//    servoSimple();
+    ledParallel();
+    servoParallel();
+
+    runParallelProcesses();
 }
