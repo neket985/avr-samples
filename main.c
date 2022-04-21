@@ -27,5 +27,9 @@ int main(void) {
 
     _delay_ms(500);
     LCD_clear();
-    LCD_sendString("hui");
+    LCD_sendString("1234");
+//    LCD_clear();
+    LCD_setPosition(5, 1);
+    LCD_sendString("3214");
+
 }

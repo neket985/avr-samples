@@ -7,6 +7,5 @@ void sendByte(unsigned char, unsigned char);
 void LCD_setPosition(unsigned char, unsigned char);
 void LCD_sendString(char[]);
 void LCD_clear(void);
-void LCD_BackLight(unsigned char);
 
 #endif /* LCD_H_ */
