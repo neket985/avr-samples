@@ -24,9 +24,9 @@ void LCD_Init(void) {
     _delay_ms(1);
     sendHalfByte(0b00000010);
 	_delay_ms(1);
-	sendByte(0b00101000, 0); // Data 4bit, Line 2, Font 5x8
+	sendReadByte(0b00101000); // Data 4bit, Line 2, Font 5x8
     _delay_ms(1);
-    sendByte(0b00001110, 0); //Display ON, Cursor ON, Blink ON
+    sendReadByte(0b00001111); //Display ON, Cursor ON, Blink ON
     _delay_ms(1);
 
     LCD_BACKLIGHT_SET;
@@ -41,16 +41,20 @@ void sendHalfByte(unsigned char c) {
     _delay_us(50);
     state_lcd &= ~0xF0;
     TWI_TransmitByAddr(state_lcd |= c, I2C_WADDR);
-    LCD_E_CLR; // Disable E
+    LCD_E_CLR;
     _delay_us(50);
-
 }
 
-void sendByte(unsigned char c, unsigned char mode) {
-    if (mode == 0) TWI_TransmitByAddr(state_lcd &= ~0x01, I2C_WADDR);
-    else TWI_TransmitByAddr(state_lcd |= 0x01, I2C_WADDR);
-    unsigned char hc = 0;
-    hc = c >> 4;
+void sendReadByte(unsigned char c) {
+    LCD_RS_CLR;
+    unsigned char hc = c >> 4;
+    sendHalfByte(hc);
+    sendHalfByte(c);
+}
+
+void sendWriteByte(unsigned char c) {
+    LCD_RS_SET;
+    unsigned char hc = c >> 4;
     sendHalfByte(hc);
     sendHalfByte(c);
 }
@@ -58,27 +62,27 @@ void sendByte(unsigned char c, unsigned char mode) {
 void LCD_sendString(char s[]) {
     int n;
     for (n = 0; s[n] != '\0'; n++)
-        sendByte(s[n], 1);
+        sendWriteByte(s[n]);
 }
 
 void LCD_setPosition(unsigned char x, unsigned char y) {
     switch (y) {
         case 0:
-            sendByte(x | 0x80, 0);
+            sendReadByte(x | 0x80);
             break;
         case 1:
-            sendByte((0x40 + x) | 0x80, 0);
+            sendReadByte((0x40 + x) | 0x80);
             break;
         case 2:
-            sendByte((0x10 + x) | 0x80, 0);
+            sendReadByte((0x10 + x) | 0x80);
             break;
         case 3:
-            sendByte((0x50 + x) | 0x80, 0);
+            sendReadByte((0x50 + x) | 0x80);
             break;
     }
 }
 
 void LCD_clear(void) {
-    sendByte(0x01, 0);
+    sendReadByte(0x01);
     _delay_ms(5);
 }

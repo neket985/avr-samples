@@ -5,6 +5,7 @@
 #define __DELAY_BACKWARD_COMPATIBLE__
 
 #include <util/delay.h>
+#include <stdio.h>
 
 //#include "helper/helper.c"
 //#include "helper/parallel.c"
@@ -24,12 +25,17 @@ int main(void) {
     TWI_Init();
     _delay_ms(50);  //wait after power on
     LCD_Init();
-
-    _delay_ms(500);
     LCD_clear();
     LCD_sendString("1234");
-//    LCD_clear();
-    LCD_setPosition(5, 1);
-    LCD_sendString("3214");
 
+    _delay_ms(500);
+
+    uint8_t i = 0;
+    char buff[10];
+    while (1) {
+        sprintf(buff, "%03d", i++);
+        LCD_setPosition(5, 1);
+        LCD_sendString(buff);
+        _delay_ms(1000);
+    }
 }
