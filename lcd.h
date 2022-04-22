@@ -8,5 +8,6 @@ void sendWriteByte(unsigned char);
 void LCD_setPosition(unsigned char, unsigned char);
 void LCD_sendString(char[]);
 void LCD_clear(void);
+void LCD_newChar(char symbol[], char address);
 
 #endif /* LCD_H_ */

@@ -23,15 +23,15 @@ void LCD_Init(void) {
     sendHalfByte(0b00000011);
     _delay_ms(1);
     sendHalfByte(0b00000010);
-	_delay_ms(1);
-	sendReadByte(0b00101000); // Data 4bit, Line 2, Font 5x8
+    _delay_ms(1);
+    sendReadByte(0b00101000); // Data 4bit, Line 2, Font 5x8// посмотреть, как поведет себя при 0x2c or 0x28
     _delay_ms(1);
     sendReadByte(0b00001111); //Display ON, Cursor ON, Blink ON
     _delay_ms(1);
 
     LCD_BACKLIGHT_SET;
 
-	LCD_RW_CLR; //LCD Write ON
+    LCD_RW_CLR; //LCD Write ON
 }
 
 void sendHalfByte(unsigned char c) {
@@ -85,4 +85,27 @@ void LCD_setPosition(unsigned char x, unsigned char y) {
 void LCD_clear(void) {
     sendReadByte(0x01);
     _delay_ms(5);
+}
+
+/** пример задания символа
+char symbols[][8]={
+        {
+                0b00000001,
+                0b00000010,
+                0b00000100,
+                0b00001000,
+                0b00010000,
+                0b00010000,
+                0b00001000,
+                0b00001100,
+        }
+};
+!!!после записи нового значения в ячейку необходимо вызвать setPosition!!!
+ **/
+void LCD_newChar(char symbol[], char address) {
+    sendReadByte(0x40 + address * 8);
+
+    for(uint8_t i=0;i<8;++i){
+        sendWriteByte(symbol[i]);
+    }
 }
