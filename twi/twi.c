@@ -6,7 +6,7 @@ void TWI_Init(void) {
     * TWBR = ((F_cpu/F_scl) - 16)/(2*4^TWPS)
 	*/
 	TWBR = 0x48;
-//	TWBR = 0x10;
+    _delay_ms(50);  //wait after power on
 }
 
 void TWI_Start(void) {

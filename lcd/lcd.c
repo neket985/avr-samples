@@ -1,5 +1,6 @@
 #include "twi.h"
 #include "lcd.h"
+#include "lcd_ru.c"
 
 uint8_t state_lcd = 0; //состояние управляющих битов (P0-P3)
 #define I2C_ADDR 0b0100111 //0x27
@@ -65,6 +66,10 @@ void LCD_sendString(char s[]) {
         sendWriteByte(s[n]);
 }
 
+void LCD_sendChar(char c) {
+    sendWriteByte(c);
+}
+
 void LCD_setPosition(unsigned char x, unsigned char y) {
     switch (y) {
         case 0:
@@ -100,12 +105,13 @@ char symbols[][8]={
                 0b00001100,
         }
 };
-!!!после записи нового значения в ячейку необходимо вызвать setPosition!!!
+ !!!после записи нового значения в ячейку необходимо вызвать setPosition!!!
+ под кастомные символы отведены адреса 0-7
  **/
 void LCD_newChar(char symbol[], char address) {
     sendReadByte(0x40 + address * 8);
 
-    for(uint8_t i=0;i<8;++i){
+    for (uint8_t i = 0; i < 8; ++i) {
         sendWriteByte(symbol[i]);
     }
 }
